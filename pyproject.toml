@@ -3,4 +3,6 @@ name = "training-set-classifier-georeset"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "trafilatura>=2.1.0",
+]
