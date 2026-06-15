@@ -8,7 +8,7 @@ from pathlib import Path
 
 import trafilatura
 
-SAMPLES_DIR = Path("samples")
+from src.config import SAMPLES_DIR
 
 SOURCES = [
     ("biodiversity.html", "https://en.wikipedia.org/wiki/Biodiversity"),

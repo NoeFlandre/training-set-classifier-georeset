@@ -2,7 +2,7 @@ from pathlib import Path
 
 import trafilatura
 
-SAMPLES_DIR = Path("samples")
+from src.config import SAMPLES_DIR
 
 
 def extract_text(html: str) -> str | None:
