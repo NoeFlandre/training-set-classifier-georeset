@@ -17,6 +17,9 @@ def main():
         preview = preview_text(text, 100)
         print(f"-----{path}------")
         print(f"Preview: {preview}")
+        out_txt = path.with_suffix(".txt")
+        out_txt.write_text(text, encoding="utf8")
+        print(f"Saved text to {out_txt}")
 
 
 if __name__ == "__main__":
