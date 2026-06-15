@@ -1,17 +1,5 @@
-from pathlib import Path
-
-import trafilatura
-
 from src.config import SAMPLES_DIR
-
-
-def extract_text(html: str) -> str | None:
-    return trafilatura.extract(
-        html,
-        include_comments=False,
-        include_tables=False,
-        favor_recall=True,
-    )
+from src.extractor import extract_text
 
 
 def preview_text(text: str, char_count: int) -> str:
