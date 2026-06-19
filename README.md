@@ -1,6 +1,7 @@
 # training-set-classifier-georeset
 
 In this repository we are building a training set for a classifier to filter sentences based on their relevance to environment/ agriculture. The data for this project will be stored in this bucket: "https://huggingface.co/buckets/NoeFlandre/training-set-classifier-georeset"
+Slide deck: https://docs.google.com/presentation/d/1qtOMLXpeByIxZMG_3OH1vPGnSRc6Zy8ucjigw7cUkZY/edit?usp=sharing
 
 We are proceeding as follows:
 
