@@ -17,3 +17,8 @@ We are proceeding as follows:
 - Using MinHash we will make sure to duplicate sentences. 
 - Based on these extracted sentences we will be using an LLM to label them as relevant or not for our use case. 
 - A human reviewer will be manually labelling an held out set in order to compute an inter rater agreement between the LLM and the human judge for us to understand whether the LLM agrees with what we would expect a human to output for our use case.
+
+
+# First prototype
+
+In order to first prototype, we will be using wikipedia articles
