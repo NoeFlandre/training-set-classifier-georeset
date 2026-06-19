@@ -1,8 +1,10 @@
-from datasketch import MinHash
+from datasketch import MinHash, MinHashLSH
 
 from src.sentence_filtering import WORD_RE
 
 DEFAULT_NUM_PERM = 128
+DEFAULT_THRESHOLD = 0.7
+DEFAULT_N = 3
 
 
 def split_sentence_to_words(sentence: str) -> list[str]:
@@ -41,3 +43,62 @@ def make_minhash(
         m.update(shingle.encode("utf-8"))
 
     return m
+
+
+def jaccard(a: set[str], b: set[str]) -> float:
+    """True Jaccard similarity between two shingle sets"""
+
+    if not a and not b:
+        return 1.0
+
+    if not a or not b:
+        return 0.0
+
+    return len(a & b) / len(a | b)
+
+
+def find_duplicates(
+    sentences: list[str],
+    threshold: float = DEFAULT_THRESHOLD,
+    num_perm: int = DEFAULT_NUM_PERM,
+    n: int = DEFAULT_N,
+) -> list[str]:
+
+    if not 0.0 <= threshold <= 1.0:
+        raise ValueError(
+            f"Error: threshold should be in the range [0, 1], got {threshold}"
+        )
+
+    shingles_sets: list[set[str]] = []
+    signatures: list[MinHash | None] = []
+
+    for sentence in sentences:
+        s = shingles(sentence, n=n)
+        shingles_sets.append(s)
+        if not s:
+            signatures.append(None)
+        else:
+            signatures.append(make_minhash(s, num_perm=num_perm))
+
+    lsh = MinHashLSH(threshold=threshold, num_perm=num_perm)
+    for i, sig in enumerate(signatures):
+        if sig is not None:
+            lsh.insert(str(i), sig)
+
+    skip: set[int] = set()
+    for i, sentence in enumerate(sentences):
+        if i in skip:
+            continue
+
+        sig_i = signatures[i]
+        if sig_i is None:
+            continue
+
+        for cand_key in lsh.query(sig_i):
+            j = int(cand_key)
+            if j == i or j in skip:
+                continue
+            if jaccard(shingles_sets[i], shingles_sets[j]) >= threshold:
+                skip.add(j)
+
+    return [s for i, s in enumerate(sentences) if i not in skip]
