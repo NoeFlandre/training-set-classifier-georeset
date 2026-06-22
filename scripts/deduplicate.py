@@ -42,7 +42,20 @@ def main():
             if line.strip()
         ]
 
-        print(f"First two sentences for {path} : {sentences_per_file[:2]}")
+        unique_sentences_per_file = find_duplicates(sentences_per_file)
+
+        print(
+            f"First two unique sentences for {path} : {unique_sentences_per_file[:2]}"
+        )
+
+        print("=== Saving sentences ===")
+        output_path = path.with_name(path.stem + ".deduped.txt")
+        output_path.write_text("\n".join(unique_sentences_per_file), encoding="utf8")
+
+        print(f"=== {path} ===")
+        print(f"Number of total sentences : {len(sentences_per_file)}")
+        print(f"Number of unique sentences : {len(unique_sentences_per_file)}")
+        print(f"Unique sentences saved to {output_path}")
 
 
 if __name__ == "__main__":
