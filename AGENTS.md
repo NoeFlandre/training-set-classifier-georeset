@@ -14,15 +14,13 @@ The full original brief is in `README.md`. This file describes the current state
 
 - Project scaffolded with `uv`, Python 3.12, `src/` layout.
 - HTML fetching (`src/fetcher.py`).
-- HTML to plain text extraction with trafilatura (`src/extractor.py`).
+- HTML to text extraction with trafilatura (`src/extractor.py`).
 - Sentence splitting and filtering with 4 rules from the README (`src/sentence_filtering.py`).
 - Tests for sentence filtering (10 tests, all green).
 - 3 sample HTML files in `samples/` with extracted `.txt` and `.filtered.txt` artifacts.
 - Deep conceptual understanding of MinHash (see `docs/minhash.md`).
-
-**In progress:**
-
-- MinHash deduplication. Concept understood, code not yet written. Next files to create: `src/dedup.py`, `tests/test_dedup.py`, `scripts/deduplicate_sentences.py`.
+- MinHash deduplication: `src/dedup.py` (shingles, make_minhash, jaccard, find_duplicates with LSH), 11 tests in `tests/test_dedup.py` all green, `scripts/deduplicate.py` reads `.filtered.txt` and writes `.deduped.txt`.
+- 3 sample HTML files now have `.deduped.txt` artifacts. Per-file dedup catches repeated boilerplate (e.g. "Archived from the original on..." lines in Wikipedia).
 
 **Not started:**
 
@@ -47,6 +45,7 @@ Run the pipeline so far:
 uv run python scripts/fetch_samples.py
 uv run python scripts/extract_text.py
 uv run python scripts/filter_sentences.py
+uv run python scripts/deduplicate.py
 ```
 
 Run tests:
@@ -72,9 +71,9 @@ uv run pytest tests/
 - Shingling (n-grams of words) as the set representation of text for Jaccard.
 - Locality-Sensitive Hashing (LSH) for fast candidate lookup.
 
-## Current focus: MinHash dedup
+## Current focus: Stage 0 (OSM polygon selection)
 
-The next file to create is `src/dedup.py`. See `docs/progress.md` for the planned micro-steps and the micro-step the user is currently on.
+Next concrete step: pick the OSM tag whitelist for environment/agriculture polygons. The labeled base-key list from the `osm-stats` side project (326 union base keys marked "yes" across TF-IDF and embedding pipelines) is the starting point. See `docs/progress.md` for the planned micro-steps.
 
 ## Files reference
 

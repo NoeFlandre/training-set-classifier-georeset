@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from src.config import SAMPLES_DIR
 from src.sentence_filtering import filter_sentences, split_sentences
 

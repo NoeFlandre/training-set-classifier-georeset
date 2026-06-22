@@ -47,6 +47,22 @@ This file tracks what is done, what is in progress, and what is next, with enoug
   - Edge cases: empty string, whitespace only (2 tests).
   - All tests reference the module constants, not hardcoded values.
 
+### Stage 4: Deduplicate
+
+- `src/dedup.py` exports:
+  - `split_sentence_to_words(sentence) -> list[str]` (uses `WORD_RE` from `sentence_filtering`).
+  - `shingles(sentence, n=3) -> set[str]` (word n-grams).
+  - `make_minhash(shingle_set, num_perm=128) -> MinHash`.
+  - `jaccard(a, b) -> float` (true Jaccard).
+  - `find_duplicates(sentences, threshold=0.7, num_perm=128, n=3) -> list[str]` (LSH + true Jaccard verification, first-seen wins).
+- Tunable constants at the top: `DEFAULT_NUM_PERM = 128`, `DEFAULT_THRESHOLD = 0.7`, `DEFAULT_N = 3`.
+- `scripts/deduplicate.py` loops over `samples/*.filtered.txt`, runs `find_duplicates`, writes `samples/*.filtered.deduped.txt`.
+- `tests/test_dedup.py` with 11 tests, all green:
+  - Shingling: case insensitivity, short input, custom `n` count.
+  - MinHash: perfect duplicates ≥ 0.9, unrelated < 0.2, near-duplicates ≥ 0.6.
+  - `find_duplicates`: empty input, identical triples collapse to one, unique list preserved, first-seen-wins ordering, threshold out of range raises `ValueError`.
+- Per-file dedup verified on the 3 samples: it correctly drops repeated boilerplate like "Archived from the original on..." lines that appear many times in Wikipedia articles. Permaculture: 74 → 73 sentences.
+
 ### MinHash conceptual understanding
 
 - 11-part deep dive covering: problem, Jaccard, scaling, the magic property, 3 worked numerical examples, why one hash function is not enough, signatures, LSH, parameters, takeaways.
@@ -54,34 +70,11 @@ This file tracks what is done, what is in progress, and what is next, with enoug
 
 ## In progress
 
-### Stage 4: Deduplicate
+### Stage 0: OSM polygon selection
 
-- Concept: understood.
-- Library: `datasketch` (added as a dependency but not yet used in code).
-- Code: not started.
-
-Planned micro-steps:
-
-1. Install `datasketch` if not already installed (verify in `pyproject.toml`).
-2. Toy experiment in the REPL: 2-3 sentences, Jaccard by hand, MinHash estimation. Builds intuition before coding.
-3. Build `src/dedup.py` with:
-   - `shingles(text, n=3) -> set[str]`
-   - `make_minhash(shingles, num_perm=128) -> MinHash`
-   - `find_duplicates(sentences, threshold=0.7) -> list[str]`
-4. Write `tests/test_dedup.py`:
-   - Test shingling: known input to known shingle set.
-   - Test that identical sentences have similarity 1.0.
-   - Test that near-duplicate sentences have high similarity (>0.5).
-   - Test that unrelated sentences have low similarity (<0.3).
-   - Test that `find_duplicates` returns the right unique set.
-5. Build `scripts/deduplicate_sentences.py`:
-   - Loop over `.filtered.txt` files.
-   - Read sentences.
-   - Deduplicate.
-   - Save to `.deduped.txt` (one per line).
-6. Inspect output: are duplicates actually duplicates? Tune threshold if needed.
-
-The user is currently on micro-step 2 (the toy experiment) at the conceptual level. The full conceptual deep dive (micro-step 1 + 2) is now done in `docs/minhash.md`.
+- Status: not started in this repo.
+- The labeled base-key list from the `osm-stats` side project is the starting whitelist: 326 union base keys marked "yes" across the TF-IDF and embedding pipelines.
+- Need to: load that list into this repo, design the Overpass query, filter by area bins, dedup by `(osm_type, osm_id)`, stratify by continent.
 
 ## Not started
 
