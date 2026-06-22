@@ -1,3 +1,4 @@
+from src.config import SAMPLES_DIR
 from src.dedup import find_duplicates, shingles, split_sentence_to_words
 
 sentence = "This is an example of sentence"
@@ -23,6 +24,25 @@ def main():
     )
     sentence_dedup = find_duplicates(sentences)
     print(sentence_dedup)
+
+    print("===  Checking the filtered files ===")
+
+    files = sorted(SAMPLES_DIR.glob("*.filtered.txt"))
+    if not files:
+        print(f"There are not files with the extension .filtered.txt in {SAMPLES_DIR}")
+        return
+    print(files)
+
+    print("=== Checking sentences in the files  ===")
+
+    for path in files:
+        sentences_per_file = [
+            line.strip()
+            for line in path.read_text(encoding="utf8").splitlines()
+            if line.strip()
+        ]
+
+        print(f"First two sentences for {path} : {sentences_per_file[:2]}")
 
 
 if __name__ == "__main__":
