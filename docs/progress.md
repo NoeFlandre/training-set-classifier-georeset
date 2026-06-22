@@ -80,7 +80,7 @@ This file tracks what is done, what is in progress, and what is next, with enoug
 
 ### Stage 0 (upstream): OSM polygon selection
 
-- Use the Overpass API to fetch polygons with environment/agriculture tags.
+- Use the Overpass API to fetch polygons with tags from the remote-sensing-relevant whitelist (326 union base keys from the osm-stats side project: `building`, `highway`, `landuse`, `natural`, `water`, `wetland`, `railway`, `amenity`, `parking`, `leisure`, `power`, etc).
 - Filter by: non-empty name, area in one of the bins (tiny <0.1, small 0.1-1, medium 1-10, large >=10 km²).
 - Deduplicate by `(osm_type, osm_id)`.
 - Stratify across world regions (continents).
@@ -95,7 +95,7 @@ This file tracks what is done, what is in progress, and what is next, with enoug
 ### Stage 5 (downstream): LLM labeling
 
 - Send each deduped sentence to an LLM.
-- Binary label: relevant / not relevant to environment/agriculture.
+- Binary label: relevant / not relevant to anything a satellite could see (land cover, land use, infrastructure, environment, agriculture).
 - Provider TBD. Options discussed: OpenAI, Anthropic, local via Ollama. User decided to defer the choice.
 
 ### Stage 6 (downstream): Human review

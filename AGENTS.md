@@ -4,7 +4,9 @@ This file is the entry point for anyone (human or coding agent) picking up this 
 
 ## What this project is
 
-We are building a training dataset for a binary classifier that filters sentences by relevance to environment and agriculture. The end goal is a model that can take any English sentence and say "yes, this is about environment or agriculture" or "no, it isn't". The dataset is stored in the Hugging Face bucket: `https://huggingface.co/buckets/NoeFlandre/training-set-classifier-georeset`.
+We are building a training dataset for a binary classifier that filters sentences by relevance to anything observable from remote sensing: land cover, land use, infrastructure (buildings, roads, railways, parking, amenities), and environment/ agriculture. The end goal is a model that can take any English sentence and say "yes, this describes something a satellite could see" or "no, it does not". The dataset is stored in the Hugging Face bucket: `https://huggingface.co/buckets/NoeFlandre/training-set-classifier-georeset`.
+
+The "remote sensing visible" framing matters: a sentence about the history of agriculture is out, but "Agricultural expansion drives deforestation" is in because deforestation is satellite-visible. A sentence about a building's architecture is out, but "a residential building of three stories" is in because the structure is satellite-visible. The full taxonomy comes from the OSM `osm-stats` whitelist (326 union base keys marked "yes") and includes `building`, `highway`, `landuse`, `natural`, `water`, `wetland`, `railway`, `amenity`, `parking`, `leisure`, `power`, etc.
 
 The full original brief is in `README.md`. This file describes the current state, architecture, and conventions.
 
