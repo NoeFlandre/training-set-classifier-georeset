@@ -3,7 +3,7 @@ from datasketch import MinHash, MinHashLSH
 from src.sentence_filtering import WORD_RE
 
 DEFAULT_NUM_PERM = 128
-DEFAULT_THRESHOLD = 0.7
+DEFAULT_THRESHOLD = 0.5
 DEFAULT_N = 3
 
 
