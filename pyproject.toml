@@ -5,6 +5,8 @@ description = "Add your description here"
 requires-python = ">=3.12"
 dependencies = [
     "datasketch>=1.10.0",
+    "huggingface-hub>=1.20.1",
+    "llama-cpp-python>=0.3.31",
     "trafilatura>=2.1.0",
 ]
 

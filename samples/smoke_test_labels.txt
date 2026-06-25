@@ -1,0 +1,4 @@
+Sentence 1: A dense forest covers the northern slopes of the r. Label : True 
+Sentence 2: The history of agriculture in Mesopotamia is well . Label : False 
+Sentence 3: Solar panels cover the rooftop of the warehouse.. Label : True 
+Sentence 4: Bird species richness was higher near the wetland . Label : False 
